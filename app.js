@@ -283,68 +283,44 @@
   function rowHTML(labelHtml, value, opts){ opts = opts||{}; var display = opts.percent?fmtPercent(value):fmt(value); return '<div class="row"><span class="key">'+labelHtml+'</span><span class="val">'+display+'</span></div>'; }
 
   // ==== Render Current ====
-// ==== Render Current ====
-function renderCurrent(rec){
-  var el = $('#cardCurrent');
-  if(!rec){ el.innerHTML = '<div class="small">Giocatore non trovato nella stagione corrente.</div>'; return; }
+  function renderCurrent(rec){
+    var el = $('#cardCurrent');
+    if(!rec){ el.innerHTML = '<div class="small">Giocatore non trovato nella stagione corrente.</div>'; return; }
+    var isP = (rec.r==='P'); var parts=[];
+    parts.push(row('Squadra', rec.sq));
+    parts.push(row('Ruolo', rec.r));
+    parts.push(rowInt('Presenze', rec.p));
+    parts.push(row('Affidabilità %', rec.aff, {percent:true}));
+    parts.push(row('MV (Tot)', rec.mvt));
+    parts.push(row('FM (Tot)', rec.fmt));
+    // indicatori/icone
+    parts.push(rowHTML(labelWithMark(isP?'GS':'Gol', isP?'gol_subiti':'gol', isP?'🔴🧠':'⚽'), isP?rec.gs:rec.gf));
+    parts.push(rowHTML(labelWithMark(isP?'GSR':'Gol su Rigore', isP?'gol_subiti_rigore':'gol_rigore', isP?'🅁🔴🧠':'🅁⚽'), isP?rec.gsr:rec.gfr));
+    parts.push(rowHTML(labelWithMark(isP?'Rigori Parati':'Rigori Sbagliati', isP?'rigori_parati':'rigori_sbagliati', isP?'🅁🟢🧠':'🅁🔴⚽'), isP?rec.rp:rec.rs));
+    parts.push(rowHTML(labelWithMark('Assist', 'assist', '🎯'), rec.as));
+    parts.push(rowHTML(labelWithMark('Autogol', 'autogol', '🔴⚽'), rec.ag));
+    parts.push(rowHTML(labelWithMark('Ammonizioni', 'ammonizioni', '🟡'), rec.a));
+    parts.push(rowHTML(labelWithMark('Espulsioni', 'espulsioni', '🟥'), rec.e));
+    if(OPTS.showDelta){ parts.push(row('Δ squadra MV (σ)', rec.mvdlt)); parts.push(row('Δ squadra FM (σ)', rec.fmdlt)); }
 
-  var isP = (rec.r==='P');
-  var parts=[];
-  parts.push(row('Squadra', rec.sq));
-  parts.push(row('Ruolo', rec.r));
-  parts.push(rowInt('Presenze', rec.p));
-  parts.push(row('Affidabilità %', rec.aff, {percent:true}));
-  parts.push(row('MV (Tot)', rec.mvt));
-  parts.push(row('FM (Tot)', rec.fmt));
-
-  // indicatori/icone
-  parts.push(rowHTML(labelWithMark(isP?'GS':'Gol', isP?'gol_subiti':'gol', isP?'🔴🧠':'⚽'), isP?rec.gs:rec.gf));
-  parts.push(rowHTML(labelWithMark(isP?'GSR':'Gol su Rigore', isP?'gol_subiti_rigore':'gol_rigore', isP?'🅁🔴🧠':'🅁⚽'), isP?rec.gsr:rec.gfr));
-  parts.push(rowHTML(labelWithMark(isP?'Rigori Parati':'Rigori Sbagliati', isP?'rigori_parati':'rigori_sbagliati', isP?'🅁🟢🧠':'🅁🔴⚽'), isP?rec.rp:rec.rs));
-  parts.push(rowHTML(labelWithMark('Assist', 'assist', '🎯'), rec.as));
-  parts.push(rowHTML(labelWithMark('Autogol', 'autogol', '🔴⚽'), rec.ag));
-  parts.push(rowHTML(labelWithMark('Ammonizioni', 'ammonizioni', '🟡'), rec.a));
-  parts.push(rowHTML(labelWithMark('Espulsioni', 'espulsioni', '🟥'), rec.e));
-
-  if(OPTS.showDelta){
-    parts.push(row('Δ squadra MV (σ)', rec.mvdlt));
-    parts.push(row('Δ squadra FM (σ)', rec.fmdlt));
-  }
-
-  var lines=[];
-  if(OPTS.showRolePos){
-    var y = seasonStr(CUR.seasonKey);
-    var rkFM = computeRankForSeason(CUR, 'fmt', rec.fmt, rec.r, OPTS.minPresRankCur);
-    var rkMV = computeRankForSeason(CUR, 'mvt', rec.mvt, rec.r, OPTS.minPresRankCur);
-    if(rkFM || rkMV){
-      lines.push('<div class="separator" style="border:none;margin:.4rem 0 0"></div>');
-      lines.push('<div class="small"><strong>Posizione nel ruolo</strong> — '+escapeHtml(y)+'</div>');
-      if(rkFM){
-        lines.push('<div class="row"><span class="key">FM '+escapeHtml(y)+' – Percentile ('+rkFM.rank+'° su '+rkFM.N+')</span><span class="val">'+fmt(rkFM.pct*100, 1).replace('.', ',')+'%</span></div>');
-        lines.push(row('FM – Z‑score', rkFM.z));
+    var lines=[];
+    if(OPTS.showRolePos){
+      var y = seasonStr(CUR.seasonKey);
+      var rkFM = computeRankForSeason(CUR, 'fmt', rec.fmt, rec.r, OPTS.minPresRankCur);
+      var rkMV = computeRankForSeason(CUR, 'mvt', rec.mvt, rec.r, OPTS.minPresRankCur);
+      if(rkFM || rkMV){
+        lines.push('<div class="separator" style="border:none;margin:.4rem 0 0"></div>');
+        lines.push('<div class="small"><strong>Posizione nel ruolo</strong> — '+escapeHtml(y)+'</div>');
+        if(rkFM){
+          lines.push('<div class="row"><span class="key">FM '+escapeHtml(y)+' – Percentile ('+rkFM.rank+'° su '+rkFM.N+')</span><span class="val">'+fmt(rkFM.pct*100, 1).replace('.', ',')+'%</span></div>');
+          lines.push(row('FM – Z‑score', rkFM.z));
+        }
+        if(rkMV){
+          lines.push('<div class="row"><span class="key">MV '+escapeHtml(y)+' – Percentile</span><span class="val">'+fmt(rkMV.pct*100, 1).replace('.', ',')+'%</span></div>');
+          lines.push(row('MV – Z‑score', rkMV.z));
+        }
       }
-      if(rkMV){
-        lines.push('<div class="row"><span class="key">MV '+escapeHtml(y)+' – Percentile</span><span class="val">'+fmt(rkMV.pct*100, 1).replace('.', ',')+'%</span></div>');
-        lines.push(row('MV – Z‑score', rkMV.z));
-      }
-      // NOTE esplicativa (allineata alla Stagione precedente):
-      lines.push('<div class="small" style="opacity:.9;margin-top:.3rem"><em>Percentile: percentuale di giocatori del ruolo con metrica ≤ al valore. Z‑score: deviazioni standard dalla media.</em></div>');
     }
-  }
-
-  var det=[];
-  if(OPTS.showDetails){
-    det.push(row('MV (Casa)', rec.mvc));
-    det.push(row('MV (Fuori)', rec.mvf));
-    det.push(row('FM (Casa)', rec.fmc));
-    det.push(row('FM (Fuori)', rec.fmf));
-    det.push(row('σ MV', rec.mvdst));
-    det.push(row('σ FM', rec.fmdst));
-  }
-
-  el.innerHTML = parts.join('') + lines.join('') +
-    (OPTS.showDetails ? ('<details class="small"><summary>Dettagli</summary><div class="card-body" style="padding:.6rem 0 0">'+det.join('')+'</div></details>') : '');
-}
 
     var det=[];
     if(OPTS.showDetails){
