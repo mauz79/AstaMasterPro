@@ -1,0 +1,7 @@
+
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'>
+ <rect width='400' height='400' fill='#0e1320'/>
+ <circle cx='200' cy='140' r='80' fill='#3aa0ff' opacity='0.35'/>
+ <rect x='90' y='240' width='220' height='100' rx='16' fill='#0b5cff' opacity='0.25'/>
+ <text x='200' y='370' text-anchor='middle' fill='#9aa4b2' font-family='system-ui,Segoe UI,Roboto' font-size='16'>AstaMasterPro</text>
+</svg>
