@@ -1,6 +1,6 @@
 # AstaMasterPro — **Main (ROOT)**
 
-> Web app **static** per analisi rapida dei giocatori di Serie A.
+> Web app **static** per analisi rapida dei giocatori di Serie A per aste basate su lista giocatori di FantaCalcio Manager.
 > **Ricerca istantanea**, schede **Stagione Corrente / Precedente / Storico**, badge e **Ranking di ruolo** (Percentile + Z‑score).
 
 ---
