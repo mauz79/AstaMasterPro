@@ -1,4 +1,4 @@
-# AstaMasterPro v9c2 — **Main (ROOT)**
+# AstaMasterPro — **Main (ROOT)**
 
 > Web app **static** per analisi rapida dei giocatori di Serie A.
 > **Ricerca istantanea**, schede **Stagione Corrente / Precedente / Storico**, badge e **Ranking di ruolo** (Percentile + Z‑score).
