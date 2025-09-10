@@ -163,6 +163,7 @@
         histShowPerPres: 'amp-histShowPerPres',
         histSelSeasons: 'amp-histSelSeasons',
         useIndicators: 'amp-useIndicators',
+		rankBadgeMetric: 'amp-rankBadgeMetric',
         showRolePos: 'amp-showRolePos'
     };
     var OPTS = null;
@@ -189,20 +190,22 @@
                 return d;
             }
         }
-        var o = {
-            minPresRankCur: qn(OPT_KEYS.minPresRankCur, 10),
-            minPresRankPrev: qn(OPT_KEYS.minPresRankPrev, 10),
-            mvPrevBadge: qn(OPT_KEYS.mvPrevBadge, 6.20),
-            fmPrevBadge: qn(OPT_KEYS.fmPrevBadge, 6.50),
-            affPrevBadge: qn(OPT_KEYS.affPrevBadge, 70),
-            showDelta: qb(OPT_KEYS.showDelta, true),
-            showDetails: qb(OPT_KEYS.showDetails, true),
-            histShowBM: qb(OPT_KEYS.histShowBM, true),
-            histShowPerPres: qb(OPT_KEYS.histShowPerPres, true),
-            histSelSeasons: qarr(OPT_KEYS.histSelSeasons, []),
-            useIndicators: qb(OPT_KEYS.useIndicators, false),
-            showRolePos: qb(OPT_KEYS.showRolePos, true)
-        };
+		var o = {
+			minPresRankCur: qn(OPT_KEYS.minPresRankCur,10),
+			minPresRankPrev: qn(OPT_KEYS.minPresRankPrev,10),
+			mvPrevBadge: qn(OPT_KEYS.mvPrevBadge,6.20),
+			fmPrevBadge: qn(OPT_KEYS.fmPrevBadge,6.50),
+			affPrevBadge: qn(OPT_KEYS.affPrevBadge,70),
+			showDelta: qb(OPT_KEYS.showDelta,true),
+			showDetails: qb(OPT_KEYS.showDetails,true),
+			histShowBM: qb(OPT_KEYS.histShowBM,true),
+			histShowPerPres: qb(OPT_KEYS.histShowPerPres,true),
+			histSelSeasons: qarr(OPT_KEYS.histSelSeasons,[]),
+			useIndicators: qb(OPT_KEYS.useIndicators,false),
+			showRolePos: qb(OPT_KEYS.showRolePos,true),
+			// NEW: metrica per il badge “Ranking (Stag. precedente)”
+			rankBadgeMetric: (localStorage.getItem(OPT_KEYS.rankBadgeMetric) || 'FM')
+		};
 
         function set(id, val, isC) {
             var el = $('#' + id);
@@ -220,8 +223,10 @@
         set('opt_histShowBM', o.histShowBM, true);
         set('opt_histShowPerPres', o.histShowPerPres, true);
         set('opt_useIndicators', o.useIndicators, true);
-        set('opt_showRolePos', o.showRolePos, true);
-        return o;
+		set('opt_showRolePos',o.showRolePos,true);
+		// NEW: inizializza il select della metrica
+		set('opt_rankBadgeMetric', o.rankBadgeMetric);
+		return o;
     }
 
     function persistOptions() {
@@ -236,7 +241,9 @@
         localStorage.setItem(OPT_KEYS.histShowPerPres, OPTS.histShowPerPres ? '1' : '0');
         localStorage.setItem(OPT_KEYS.histSelSeasons, JSON.stringify(OPTS.histSelSeasons || []));
         localStorage.setItem(OPT_KEYS.useIndicators, OPTS.useIndicators ? '1' : '0');
-        localStorage.setItem(OPT_KEYS.showRolePos, OPTS.showRolePos ? '1' : '0');
+		localStorage.setItem(OPT_KEYS.showRolePos,OPTS.showRolePos?'1':'0');
+		localStorage.setItem(OPT_KEYS.rankBadgeMetric, OPTS.rankBadgeMetric);
+
     }
 
     function populateHistSeasonOptions() {
@@ -303,6 +310,15 @@
             var el = $('#' + id);
             if (el) el.addEventListener('change', syncBools);
         });
+		
+		// NEW: cambio metrica badge ranking (FM/MV)
+			var selRank = document.querySelector('#opt_rankBadgeMetric');
+				if (selRank) selRank.addEventListener('change', function(){
+					OPTS.rankBadgeMetric = (selRank.value === 'MV') ? 'MV' : 'FM';
+					persistOptions();
+					if (SELECTED_COD) selectPlayer(SELECTED_COD);
+		});
+
 
         function close() {
             var d = document.querySelector('details.options');
@@ -694,8 +710,8 @@
                     lines.push(row('FM – Z‑score', rkFM.z));
                 }
                 if (rkMV) {
-                    lines.push('<div class="row"><span class="key">MV ' + escapeHtml(y) + ' – Percentile</span><span class="val">' + fmt(rkMV.pct * 100, 1).replace('.', ',') + '%</span></div>');
-                    lines.push(row('MV – Z‑score', rkMV.z));
+					lines.push('<div class="row"><span class="key">MV '+escapeHtml(y)+' – Percentile ('+rkMV.rank+'° su '+rkMV.N+')</span><span class="val">'+fmt(rkMV.pct*100,1).replace('.', ',')+'%</span></div>');
+					lines.push(row('MV – Z‑score', rkMV.z));
                 }
                 lines.push('<div class="small" style="opacity:.9;margin-top:.3rem"><em>Percentile: percentuale di giocatori del ruolo con metrica ≤ al valore. Z‑score: deviazioni standard dalla media.</em></div>');
             }
@@ -752,7 +768,7 @@
                     lines.push(row('FM – Z‑score', rkFM.z));
                 }
                 if (rkMV) {
-                    lines.push('<div class="row"><span class="key">MV ' + escapeHtml(y) + ' – Percentile</span><span class="val">' + fmt(rkMV.pct * 100, 1).replace('.', ',') + '%</span></div>');
+                    lines.push('<div class="row"><span class="key">FM ' + escapeHtml(y) + ' – Percentile (' + rkFM.rank + '° su ' + rkFM.N + ')</span><span class="val">' + fmt(rkFM.pct * 100, 1).replace('.', ',') + '%</span></div>');
                     lines.push(row('MV – Z‑score', rkMV.z));
                 }
                 lines.push('<div class="small" style="opacity:.9;margin-top:.3rem"><em>Percentile: percentuale di giocatori del ruolo con metrica ≤ al valore. Z‑score: deviazioni standard dalla media.</em></div>');
@@ -906,12 +922,27 @@
         var aff = prevRec.aff;
         var affPct = (aff != null ? (Number(aff) > 1 ? Number(aff) : Number(aff) * 100) : null);
         if (affPct != null && affPct >= OPTS.affPrevBadge) addBadge(b, 'Aff ' + y + ' ' + fmtPercent(aff), 'good', 'Soglia: ' + OPTS.affPrevBadge + '%');
-        var rkFM_prev = computeRankForSeason(PREV, 'fmt', prevRec.fmt, prevRec.r, OPTS.minPresRankPrev);
-        if (rkFM_prev) addBadge(b, 'Ranking ' + y + ' ' + prevRec.r + ': ' + rkFM_prev.rank + '°/' + rkFM_prev.N, 'info', 'FM ' + y + ' – z=' + fmt(rkFM_prev.z) + '; pct=' + fmt(rkFM_prev.pct * 100, 1) + '%');
-        if (idx && idx.changedRole && idx.ruolo && prevRec.r && idx.ruolo !== prevRec.r) {
-            var rkFM_new = computeRankForSeason(PREV, 'fmt', prevRec.fmt, idx.ruolo, OPTS.minPresRankPrev);
-            if (rkFM_new) addBadge(b, 'Ranking ' + y + ' nuovo ' + idx.ruolo + ': ' + rkFM_new.rank + '°/' + rkFM_new.N, 'info', 'FM ' + y + ' – z=' + fmt(rkFM_new.z) + '; pct=' + fmt(rkFM_new.pct * 100, 1) + '%');
-        }
+       
+		// NEW: metrica configurabile per il badge di ranking
+		var mKey  = (OPTS.rankBadgeMetric === 'MV') ? 'mvt' : 'fmt';
+		var mLbl  = (mKey === 'mvt') ? 'MV' : 'FM';
+		var value = prevRec[mKey];
+		var rk_prev = computeRankForSeason(PREV, mKey, value, prevRec.r, OPTS.minPresRankPrev);
+		if (rk_prev) addBadge(
+			b,
+			'Ranking '+y+' '+prevRec.r+': '+rk_prev.rank+'°/'+rk_prev.N,
+			'info',
+			mLbl+' '+y+' – z='+fmt(rk_prev.z)+'; pct='+fmt(rk_prev.pct*100,1)+'%'
+		);
+		if (idx && idx.changedRole && idx.ruolo && prevRec.r && idx.ruolo!==prevRec.r){
+		var rk_new = computeRankForSeason(PREV, mKey, value, idx.ruolo, OPTS.minPresRankPrev);
+		if (rk_new) addBadge(
+			b,
+			'Ranking '+y+' nuovo '+idx.ruolo+': '+rk_new.rank+'°/'+rk_new.N,
+			'info',
+			mLbl+' '+y+' – z='+fmt(rk_new.z)+'; pct='+fmt(rk_new.pct*100,1)+'%'
+		);
+		}
         return b;
     }
 
