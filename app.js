@@ -768,7 +768,7 @@
                     lines.push(row('FM – Z‑score', rkFM.z));
                 }
                 if (rkMV) {
-                    lines.push('<div class="row"><span class="key">FM ' + escapeHtml(y) + ' – Percentile (' + rkFM.rank + '° su ' + rkFM.N + ')</span><span class="val">' + fmt(rkFM.pct * 100, 1).replace('.', ',') + '%</span></div>');
+					lines.push('<div class="row"><span class="key">MV '+escapeHtml(y)+' – Percentile ('+rkMV.rank+'° su '+rkMV.N+')</span><span class="val">'+fmt(rkMV.pct*100,1).replace('.', ',')+'%</span></div>');
                     lines.push(row('MV – Z‑score', rkMV.z));
                 }
                 lines.push('<div class="small" style="opacity:.9;margin-top:.3rem"><em>Percentile: percentuale di giocatori del ruolo con metrica ≤ al valore. Z‑score: deviazioni standard dalla media.</em></div>');
