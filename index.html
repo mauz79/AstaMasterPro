@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AstaMasterPro v9c2 • Serie A</title>
+  <title>AstaMasterPro v1.2.1 • Serie A</title>
   <meta name="color-scheme" content="dark light" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,19 +17,23 @@
         <div class="subtitle">Il tuo scout personale per l'asta perfetta</div>
       </div>
     </div>
+
     <div class="search-panel">
       <div class="search-box" role="search" aria-label="Ricerca giocatori">
         <input id="searchInput" type="search" placeholder="Cerca giocatore (Ctrl/Cmd + Q)" autocomplete="off" />
       </div>
+
       <div class="view-toggles">
         <label class="switch"><input id="switchTheme" type="checkbox" checked /><span class="switch-text">Tema scuro</span></label>
         <label class="switch"><input id="switchCurrent" type="checkbox" checked /><span class="switch-text">Stagione corrente</span></label>
         <label class="switch"><input id="switchPrev" type="checkbox" checked /><span class="switch-text">Stagione precedente</span></label>
         <label class="switch"><input id="switchStorico" type="checkbox" checked /><span class="switch-text">Storico</span></label>
+
         <details class="options">
           <summary>Opzioni</summary>
           <div class="options__body">
             <div class="options__sticky"><button id="btnCloseOptionsTop" class="btn sm" type="button">OK</button></div>
+
             <fieldset>
               <legend>Visualizzazione</legend>
               <div class="grid-2">
@@ -39,22 +43,69 @@
                 <label><input id="opt_showRolePos" type="checkbox" checked /> Mostra “Posizione nel ruolo” (ranking)</label>
               </div>
             </fieldset>
+
             <fieldset>
-              <legend>Soglie &amp; Badge (Stagione precedente)</legend>
+              <legend>Soglie & Badge (Stagione precedente)</legend>
               <div class="grid-2">
-                <label>MV stagione precedente – soglia badge <input id="opt_mvPrevBadge" type="number" step="0.01" min="0" max="10" value="6.20" /></label>
-                <label>FM stagione precedente – soglia badge <input id="opt_fmPrevBadge" type="number" step="0.01" min="0" max="15" value="6.50" /></label>
-                <label>Affidabilità stagione precedente – soglia (%) <input id="opt_affPrevBadge" type="number" step="1" min="0" max="100" value="70" /></label>
-				<label>Ranking (Stag. precedente) – metrica badge <select id="opt_rankBadgeMetric"><option value="FM" selected>FM</option><option value="MV">MV</option></select></label>
+                <label>MV stagione precedente – soglia badge
+                  <input id="opt_mvPrevBadge" type="number" step="0.01" min="0" max="10" value="6.20" />
+                </label>
+                <label>FM stagione precedente – soglia badge
+                  <input id="opt_fmPrevBadge" type="number" step="0.01" min="0" max="15" value="6.50" />
+                </label>
+                <label>Affidabilità stagione precedente – soglia (%)
+                  <input id="opt_affPrevBadge" type="number" step="1" min="0" max="100" value="70" />
+                </label>
+                <!-- Toggle: visualizza/nasconde tutti i badge della stagione precedente -->
+                <label><input id="opt_showPrevBadges" type="checkbox" /> Mostra i badge della stagione precedente (MV/FM/Aff + cambio ruolo/squadra)</label>
               </div>
             </fieldset>
+
             <fieldset>
               <legend>Ranking</legend>
               <div class="grid-2">
-                <label>Min presenze (ranking Stag. corrente) <input id="opt_minPresRankCur" type="number" step="1" min="0" value="10" /></label>
-                <label>Min presenze (ranking Stag. precedente) <input id="opt_minPresRankPrev" type="number" step="1" min="0" value="10" /></label>
+                <label>Min presenze (ranking Stag. corrente)
+                  <input id="opt_minPresRankCur" type="number" step="1" min="0" value="10" />
+                </label>
+                <label>Min presenze (ranking Stag. precedente)
+                  <input id="opt_minPresRankPrev" type="number" step="1" min="0" value="10" />
+                </label>
+
+                <!-- NEW: Rank FM/MV – stagioni indipendenti -->
+                <label>Badge rank FM – stagione
+                  <select id="opt_rankBadgeSeasonFM">
+                    <option value="">Nessuna</option>
+                  </select>
+                </label>
+                <label>Badge rank MV – stagione
+                  <select id="opt_rankBadgeSeasonMV">
+                    <option value="">Nessuna</option>
+                  </select>
+                </label>
+
+                <!-- Rimane per le card (percentile/z-score su PREV) -->
+                <label>Ranking (Stag. precedente) – metrica badge
+                  <select id="opt_rankBadgeMetric"><option value="FM" selected>FM</option><option value="MV">MV</option></select>
+                </label>
               </div>
             </fieldset>
+
+            <fieldset>
+              <legend>Badge per anno (valori)</legend>
+              <div class="grid-2">
+                <label>Badge FM/MV – stagione
+                  <select id="opt_badgeSeasonValues">
+                    <option value="">Nessuna</option>
+                  </select>
+                </label>
+                <label>Badge Aff – stagione
+                  <select id="opt_badgeSeasonAff">
+                    <option value="">Nessuna</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+
             <fieldset>
               <legend>Storico</legend>
               <div class="grid-2">
@@ -68,6 +119,7 @@
                 </div>
               </div>
             </fieldset>
+
             <div class="opts-actions between">
               <button id="btnResetOptions" class="btn sm" type="button">Reset impostazioni</button>
               <button id="btnCloseOptions" class="btn sm" type="button">OK</button>
@@ -76,6 +128,7 @@
         </details>
       </div>
     </div>
+
     <div id="panelResults" class="container hidden" role="listbox" aria-label="risultati">
       <ul id="results" class="results"></ul>
     </div>
@@ -116,7 +169,6 @@
 <footer class="site-footer">
   <div class="container small">AstaMasterPro ©2025 mauz79</div>
 </footer>
-
 <script defer src="app.js"></script>
 </body>
 </html>
