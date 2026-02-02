@@ -1,134 +1,131 @@
-﻿[![Latest release](https://img.shields.io/github/v/release/mauz79/&sort=semver)](https://github.com/mauz79/AstaMasterPro/releases/latest)
+[![Latest release](https://img.shields.io/github/v/release/mauz79/AstaMasterPro?include_prereleases&sort=semver)](https://github.com/mauz79/AstaMasterPro/releases/latest)
 
-# AstaMasterPro â€“ TEST build (v1.2.1 badge per stagione + toggle prev)
-Questa Ã¨ una repo di test per provare:
+# AstaMasterPro – TEST build (v1.2.1 badge per stagione + toggle prev)
+
+Questa è una repo di test per provare:
 - badge ranking **FM** e **MV** per **stagioni selezionabili** (ora con **due selettori indipendenti**)
-- possibilitÃ  di **non visualizzare** i badge della **stagione precedente** (toggle in Opzioni)
+- possibilità di **non visualizzare** i badge della **stagione precedente** (toggle in Opzioni)
 
 ## Struttura
 - `index.html`, `styles.css`, `app.js`
-- `data/` â†’ file stagionali JSON (accetta `YYYY_YYYY+1.json`, `YYYY.json`, `YYYY-YYYY+1.json`)
-- `img/` â†’ `placeholder.svg` + foto opzionali `COD.{jpg|png|webp}`
-- `img/ico/` â†’ icone opzionali
-- `.nojekyll` â†’ file vuoto
+- `data/` → file stagionali JSON (accetta `YYYY_YYYY+1.json`, `YYYY.json`, `YYYY-YYYY+1.json`)
+- `img/` → `placeholder.svg` + foto opzionali `COD.{jpg|png|webp}`
+- `img/ico/` → icone opzionali
+- `.nojekyll` → file vuoto
 
 > La webapp scandisce automaticamente gli ultimi **8 anni** fino a **+1** in avanti e carica la prima corrispondenza valida per ciascuna stagione (una tra `YYYY_YYYY+1.json`, `YYYY.json`, `YYYY-YYYY+1.json`).
 
 ## Avvio locale (facoltativo)
 Apri `index.html` con un server statico (es. VS Code Live Server o `python -m http.server`) per evitare problemi di CORS sul `fetch` dei JSON.
 
-# AstaMasterPro v9c2 â€” **Main (ROOT)**
+# AstaMasterPro v9c2 — **Main (ROOT)**
 > Web app **static** per analisi rapida dei giocatori di Serie A.  
-> **Ricerca istantanea**, schede **Stagione Corrente / Precedente / Storico**, badge e **Ranking di ruolo** (Percentile + Zâ€‘score).
+> **Ricerca istantanea**, schede **Stagione Corrente / Precedente / Storico**, badge e **Ranking di ruolo** (Percentile + Z‑score).
 
 ---
 
-## ðŸ“ Struttura della webapp (root del repo)
+## Struttura della webapp (root del repo)
 ```text
 /
-â”œâ”€ index.html            # Entry point (root)
-â”œâ”€ styles.css            # Stili
-â”œâ”€ app.js                # Logica: ricerca, pannelli, ranking
-â”œâ”€ .nojekyll             # Disattiva build Jekyll su GitHub Pages
-â”œâ”€ README.md             # Questo file
-â”œâ”€ /img/
-â”‚  â”œâ”€ placeholder.svg    # Segnaposto immagine giocatore
-â”‚  â”œâ”€ /ico/              # (opz.) icone SVG per le statistiche
-â”‚  â””â”€ <COD>.{jpg|png|webp} # Foto giocatore (nome file = COD)
-â””â”€ /data/
-   â”œâ”€ 2025_2026.json     # Stagione 2025/26 (formato supportato 1)
-   â”œâ”€ 2025.json          # Stagione 2025/26 (formato supportato 2)
-   â””â”€ 2025-2026.json     # Stagione 2025/26 (formato supportato 3)
+├─ index.html            # Entry point (root)
+├─ styles.css            # Stili
+├─ app.js                # Logica: ricerca, pannelli, ranking
+├─ .nojekyll             # Disattiva build Jekyll su GitHub Pages
+├─ README.md             # Questo file
+├─ /img/
+│  ├─ placeholder.svg    # Segnaposto immagine giocatore
+│  ├─ /ico/              # (opz.) icone SVG per le statistiche
+│  └─ <COD>.{jpg|png|webp} # Foto giocatore (nome file = COD)
+└─ /data/
+   ├─ 2025_2026.json     # Stagione 2025/26 (formato supportato 1)
+   ├─ 2025.json          # Stagione 2025/26 (formato supportato 2)
+   └─ 2025-2026.json     # Stagione 2025/26 (formato supportato 3)
 ```
 
 **Note**
-- Le **foto** dei giocatori vanno in `img/` e devono chiamarsi **`<COD>.<estensione>`** (dove `COD` Ã¨ lâ€™ID univoco del giocatore nei dati). Lâ€™app prova **in ordine**: `jpg`, `png`, `webp`.
-- I **file stagione** devono risiedere in `data/` e possono chiamarsi **`YYYY_YYYY+1.json`**, **`YYYY.json`** oppure **`YYYY-YYYY+1.json`** (lâ€™app tenta tutte le varianti).
+- Le **foto** dei giocatori vanno in `img/` e devono chiamarsi **`<COD>.<estensione>`** (dove `COD` è l’ID univoco del giocatore nei dati). L’app prova **in ordine**: `jpg`, `png`, `webp`.
+- I **file stagione** devono risiedere in `data/` e possono chiamarsi **`YYYY_YYYY+1.json`**, **`YYYY.json`** oppure **`YYYY-YYYY+1.json`** (l’app tenta tutte le varianti).
 
 ---
 
-## ðŸ§­ Flusso dati
+## Flusso dati
 - La webapp utilizza gli **output di FantaCalcio Manager 8.6.0** (`.xls`) **convertiti in JSON** tramite **FCM_Excel_2_JSON** di *mauz79*:
   - Tool: https://github.com/mauz79/FCM_Excel_2_JSON
 - Per le **foto** si consiglia il **FotoPack di AlfaAlfa per AstaManager** (compatibile AstaManager/AstaMaster). Le immagini vanno rinominate secondo il `COD` e collocate in `img/`.
   - FotoPack: https://www.legafantacalciosanremo.it/forum/viewtopic.php?t=3935
 
-> Il formato JSON supporta sia **array di oggetti** `[{...}, â€¦]` sia **tabellare** `{ columns:[], players:[] }` (con `players` come array di righe e `columns` per mappare i campi).  
-> **Colonne riconosciute** (caseâ€‘insensitive): `COD`, `Nome`, `R/ruolo`, `Sq/squadra`, `P`, `Aff%`, `MVT`, `FMT`, `MVC/MVF/FMC/FMF`, `MVDSt/MVDlt/FMDSt/FMDlt`, `GF/GFR/RS/AS/AG/A/E` e, per i portieri, `GS/GSR/RP`.
+> Il formato JSON supporta sia **array di oggetti** `[{...}, …]` sia **tabellare** `{ columns:[], players:[] }` (con `players` come array di righe e `columns` per mappare i campi).  
+> **Colonne riconosciute** (case‑insensitive): `COD`, `Nome`, `R/ruolo`, `Sq/squadra`, `P`, `Aff%`, `MVT`, `FMT`, `MVC/MVF/FMC/FMF`, `MVDSt/MVDlt/FMDSt/FMDlt`, `GF/GFR/RS/AS/AG/A/E` e, per i portieri, `GS/GSR/RP`.
 
 ---
 
-## ðŸ§® Ranking di ruolo (in Corrente e Precedente)
+## Ranking di ruolo (in Corrente e Precedente)
 Per ogni ruolo (**P/D/C/A**) e metrica (**MV/FM**), filtrando per **min presenze**:
-- **Percentile** = quota di giocatori del ruolo con metrica â‰¤ al valore.
-- **Zâ€‘score** = (valore âˆ’ media) / deviazione standard.  
-> La **nota esplicativa** Ã¨ sempre visibile in entrambi i pannelli.
+- **Percentile** = quota di giocatori del ruolo con metrica ≤ al valore.
+- **Z‑score** = (valore − media) / deviazione standard.  
+> La **nota esplicativa** è sempre visibile in entrambi i pannelli.
 
 ---
 
-## ðŸŽ›ï¸ Opzioni (pannello â€œOpzioniâ€)
-- **Visualizzazione**: **Î” squadra (Ïƒ)**, **Dettagli** (Casa/Fuori, Dev.Std), **Indicatori testuali**.
+## Opzioni (pannello “Opzioni”)
+- **Visualizzazione**: **Δ squadra (σ)**, **Dettagli** (Casa/Fuori, Dev.Std), **Indicatori testuali**.
 - **Ranking**:
   - **Min presenze** (separate per Corrente/Precedente).
-  - **Badge rank FM â€“ stagione** *(NUOVO v1.2.1)* â†’ mostra il **badge Rank FM** per lâ€™anno scelto. Se â€œNessunaâ€, **non viene mostrato**.
-  - **Badge rank MV â€“ stagione** *(NUOVO v1.2.1)* â†’ mostra il **badge Rank MV** per lâ€™anno scelto. Se â€œNessunaâ€, **non viene mostrato**.
+  - **Badge rank FM – stagione** *(NUOVO v1.2.1)* → mostra il **badge Rank FM** per l’anno scelto. Se “Nessuna”, **non viene mostrato**.
+  - **Badge rank MV – stagione** *(NUOVO v1.2.1)* → mostra il **badge Rank MV** per l’anno scelto. Se “Nessuna”, **non viene mostrato**.
 - **Soglie & Badge (Stagione precedente)**:
   - **MV/FM/Aff**: soglie per i badge su **stagione precedente**.
   - **Mostra i badge della stagione precedente** *(NUOVO v1.2.1)*: attiva/disattiva **in testata** i badge della precedente (MV/FM/Aff su soglia + **Cambio Ruolo/Squadra**).
 - **Storico**: selezione stagioni, **Bonus/Malus**, **Statistiche per presenza**.
 
-> I nuovi selettori e il toggle operano **solo sullâ€™header** del giocatore; le card â€œCorrente/Precedenteâ€ e i relativi calcoli di ranking **restano invariati**.
+> I nuovi selettori e il toggle operano **solo sull’header** del giocatore; le card “Corrente/Precedente” e i relativi calcoli di ranking **restano invariati**.
 
 ---
 
-## ðŸ–¼ï¸ Legenda icone (cartella `img/ico/`)
+## Legenda icone (cartella `img/ico/`)
 Questi nomi (senza spazi, minuscoli) sono supportati da `app.js`. Aggiungi in `img/ico/` i relativi **SVG**:
 ```text
-assist.svg                # ðŸŽ¯ Assist
-autogol.svg               # ðŸ”´âš½ Autogol
-ammonizioni.svg           # ðŸŸ¡ Ammonizioni
-espulsioni.svg            # ðŸŸ¥ Espulsioni
-gol.svg                   # âš½ Gol (giocatori di movimento)
-gol_rigore.svg            # ðŸ…âš½ Gol su rigore
-rigori_sbagliati.svg      # ðŸ…ðŸ”´âš½ Rigori sbagliati
+assist.svg                # 🎯 Assist
+autogol.svg               # 🔴⚽ Autogol
+ammonizioni.svg           # 🟡 Ammonizioni
+espulsioni.svg            # 🟥 Espulsioni
+gol.svg                   # ⚽ Gol (giocatori di movimento)
+gol_rigore.svg            # 🅁⚽ Gol su rigore
+rigori_sbagliati.svg      # 🅁🔴⚽ Rigori sbagliati
 # per Portieri
-gol_subiti.svg            # ðŸ”´ðŸ§  Gol subiti
-gol_subiti_rigore.svg     # ðŸ…ðŸ”´ðŸ§  Gol subiti su rigore
-rigori_parati.svg         # ðŸ…ðŸŸ¢ðŸ§  Rigori parati
+gol_subiti.svg            # 🔴🧠 Gol subiti
+gol_subiti_rigore.svg     # 🅁🔴🧠 Gol subiti su rigore
+rigori_parati.svg         # 🅁🟢🧠 Rigori parati
 ```
 > In assenza di SVG, puoi attivare gli **indicatori testuali** (emoji) dal pannello Opzioni.
 
 ---
 
-## ðŸš€ Deploy (GitHub Pages â€” ROOT)
+## Deploy (GitHub Pages — ROOT)
 1. In **root**: `index.html`, `styles.css`, `app.js`, `.nojekyll`, cartella `img/`.
 2. Inserisci i JSON in `data/` con uno dei nomi supportati.
-3. **Settings â†’ Pages** â†’ *Deploy from branch* â†’ branch `main` â†’ folder **/** (root) â†’ **Save**.
+3. **Settings → Pages** → *Deploy from branch* → branch `main` → folder **/** (root) → **Save**.
 4. Premi `Ctrl/Cmd + Q` per la ricerca e inizia a digitare.
 
 ### Troubleshooting
-- â€œ**Nessun file stagione trovato**â€: controlla **nomi file** e **percorso** `data/`.  
-  Apri la **Console (F12)**: vedrai lâ€™elenco dei path caricati (log â€œStagioni caricateâ€).
+- “**Nessun file stagione trovato**”: controlla **nomi file** e **percorso** `data/`.  
+  Apri la **Console (F12)**: vedrai l’elenco dei path caricati (log “Stagioni caricate”).
 - Test locale: avvia un server (`python -m http.server`) e apri `http://localhost:8000`.
 
 ---
 
-## ðŸ“ Release notes (test v1.2.1)
-- **Nuovo**: selettori **indipendenti** per *Rank FM â€“ stagione* e *Rank MV â€“ stagione* (header).  
-- **Nuovo**: toggle **Mostra i badge della stagione precedente** (MV/FM/Aff su soglia + Cambio Ruolo/Squadra).  
-- **Invariato**: ranking nelle card, storico, autoâ€‘discovery stagioni, nomi file supportati, foto per `COD`.
-
-**AstaMasterPro Â©2025 mauz79** â€” v9c2
-
-
-<!-- RUNBOOK_TOOLS_START -->
 ## Runbook & Tools
-
 - **Runbook (repo)**: [tools/runbook.md](tools/runbook.md)
 - **Prompt (repo)**: [tools/prompt_continue.txt](tools/prompt_continue.txt)
-- **Runbook (release asset)**: [runbook.md](https://github.com/mauz79/AstaMasterPro/releases/download/v1.2.1/runbook.md)
-- **Prompt (release asset)**: [prompt_continue.txt](https://github.com/mauz79/AstaMasterPro/releases/download/v1.2.1/prompt_continue.txt)
-- **ExcelJSON tool (asset)**: [FCM_Excel_2_JSON.zip](https://github.com/mauz79/AstaMasterPro/releases/download/v1.2.1/FCM_Excel_2_JSON.zip)
+- **Release v1.2.1 — assets**: https://github.com/mauz79/AstaMasterPro/releases/tag/v1.2.1
 
-<!-- RUNBOOK_TOOLS_END -->
+> Cartella locale: `D:\DEV_APPS\AstaMasterPro	ools\`
 
+---
+
+## Release notes (test v1.2.1)
+- **Nuovo**: selettori **indipendenti** per *Rank FM – stagione* e *Rank MV – stagione* (header).  
+- **Nuovo**: toggle **Mostra i badge della stagione precedente** (MV/FM/Aff su soglia + Cambio Ruolo/Squadra).  
+- **Invariato**: ranking nelle card, storico, auto‑discovery stagioni, nomi file supportati, foto per `COD`.
+
+**AstaMasterPro ©2025 mauz79** — v9c2
