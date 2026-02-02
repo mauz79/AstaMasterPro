@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AstaMasterPro v1.2.1 • Serie A</title>
   <meta name="color-scheme" content="dark light" />
-  <link rel="stylesheet" href="styles.css" />
+  <title>AstaMasterPro • Serie A</title>
+  <!-- Nota: il ?v=1.2.1 aiuta a forzare l’aggiornamento da cache quando aggiorni i file -->
+  <link rel="stylesheet" href="styles.css?v=1.2.1" />
 </head>
 <body>
 <header class="site-header">
@@ -56,7 +57,6 @@
                 <label>Affidabilità stagione precedente – soglia (%)
                   <input id="opt_affPrevBadge" type="number" step="1" min="0" max="100" value="70" />
                 </label>
-                <!-- Toggle: visualizza/nasconde tutti i badge della stagione precedente -->
                 <label><input id="opt_showPrevBadges" type="checkbox" /> Mostra i badge della stagione precedente (MV/FM/Aff + cambio ruolo/squadra)</label>
               </div>
             </fieldset>
@@ -71,7 +71,6 @@
                   <input id="opt_minPresRankPrev" type="number" step="1" min="0" value="10" />
                 </label>
 
-                <!-- NEW: Rank FM/MV – stagioni indipendenti -->
                 <label>Badge rank FM – stagione
                   <select id="opt_rankBadgeSeasonFM">
                     <option value="">Nessuna</option>
@@ -83,7 +82,6 @@
                   </select>
                 </label>
 
-                <!-- Rimane per le card (percentile/z-score su PREV) -->
                 <label>Ranking (Stag. precedente) – metrica badge
                   <select id="opt_rankBadgeMetric"><option value="FM" selected>FM</option><option value="MV">MV</option></select>
                 </label>
@@ -169,6 +167,7 @@
 <footer class="site-footer">
   <div class="container small">AstaMasterPro ©2025 mauz79</div>
 </footer>
-<script defer src="app.js"></script>
+
+<script defer src="app.js?v=1.2.1"></script>
 </body>
 </html>
