@@ -16,7 +16,7 @@
 
   // --------- UTIL ---------
   function escapeHtml(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return String(s == null ? '' : s).replace(/[&<>\"']/g, function (c) {
       return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
     });
   }
@@ -333,7 +333,7 @@
       var title='<span class="result-title">'+highlightMatch(item.nome, q)+'</span>';
       var meta ='<span class="result-meta">'+escapeHtml(item.ruolo)+' · '+escapeHtml(item.squadra)+'</span>';
       var badges=[];
-      if(OPTS.showPrevBadges){
+      if(OPTS.showPrevBadges){ // evidenzia cambi solo se attivo
         if(item.changedRole) badges.push('<span class="badge warn" title="Cambio ruolo vs Stag. prec.">Cambio Ruolo</span>');
         if(item.changedTeam) badges.push('<span class="badge alert" title="Cambio squadra vs Stag. prec.">Cambio Squadra</span>');
       }
@@ -658,7 +658,7 @@
     discoverSeasons().then(function(list){
       SEASONS = list || [];
       if(!SEASONS.length){
-        var msg='Nessun file stagione trovato in: '+DATA_DIRS.join(' · ')+' (es. 2025_2026.json, 2025.json o 2025-2026.json)';
+        var msg='Nessun file stagione trovato in: '+DATA_DIRS.join(' · ')+' (es. 2024_2025.json, 2024.json o 2024-2025.json)';
         console.warn(msg); alert(msg); return;
       }
       CUR = SEASONS[SEASONS.length-1];
