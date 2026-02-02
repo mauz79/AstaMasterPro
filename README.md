@@ -1,23 +1,5 @@
 [![Latest release](https://img.shields.io/github/v/release/mauz79/AstaMasterPro?include_prereleases&sort=semver)](https://github.com/mauz79/AstaMasterPro/releases/latest)
 
-# AstaMasterPro – TEST build (v1.2.1 badge per stagione + toggle prev)
-
-Questa è una repo di test per provare:
-- badge ranking **FM** e **MV** per **stagioni selezionabili** (ora con **due selettori indipendenti**)
-- possibilità di **non visualizzare** i badge della **stagione precedente** (toggle in Opzioni)
-
-## Struttura
-- `index.html`, `styles.css`, `app.js`
-- `data/` → file stagionali JSON (accetta `YYYY_YYYY+1.json`, `YYYY.json`, `YYYY-YYYY+1.json`)
-- `img/` → `placeholder.svg` + foto opzionali `COD.{jpg|png|webp}`
-- `img/ico/` → icone opzionali
-- `.nojekyll` → file vuoto
-
-> La webapp scandisce automaticamente gli ultimi **8 anni** fino a **+1** in avanti e carica la prima corrispondenza valida per ciascuna stagione (una tra `YYYY_YYYY+1.json`, `YYYY.json`, `YYYY-YYYY+1.json`).
-
-## Avvio locale (facoltativo)
-Apri `index.html` con un server statico (es. VS Code Live Server o `python -m http.server`) per evitare problemi di CORS sul `fetch` dei JSON.
-
 # AstaMasterPro v9c2 — **Main (ROOT)**
 > Web app **static** per analisi rapida dei giocatori di Serie A.  
 > **Ricerca istantanea**, schede **Stagione Corrente / Precedente / Storico**, badge e **Ranking di ruolo** (Percentile + Z‑score).
