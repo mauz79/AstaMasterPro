@@ -1,0 +1,20 @@
+
+CONTINUA QUESTA CONVERSAZIONE IN UNA NUOVA CHAT
+
+Contesto: gestione del progetto AstaMasterPro v1.1 con webapp in HTML/CSS/JS, caricata su GitHub Pages, con dati in /data (stagioni JSON) e immagini in /img.
+
+Funzioni disponibili:
+- Analisi codice app.js
+- Patch incremental e safe
+- Generazione file, release notes, ZIP root-ready
+- Aggiornamenti Git/GitHub
+
+Richiedi sempre modifiche MINIME e SENZA alterare funzioni esistenti se non richiesto.
+
+Obiettivi:
+- Manutenzione app.js
+- Aggiunta funzionalità
+- Preparazione release
+- Debug caricamento JSON
+- Modifiche ranking FM/MV
+- Ottimizzazioni front-end

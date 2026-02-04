@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AstaMasterPro v1.5.0 • Analyst Edition</title>
+  <meta name="color-scheme" content="dark light" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <div class="brandline">
+      <span class="logo-dot" aria-hidden="true"></span>
+      <div>
+        <h1 style="margin:0">AstaMasterPro</h1>
+        <div class="subtitle">Analyst Edition • Il tuo vantaggio competitivo</div>
+      </div>
+    </div>
+
+    <div class="search-panel">
+      <div class="search-box" role="search" aria-label="Ricerca giocatori">
+        <input id="searchInput" type="search" placeholder="Cerca giocatore (Ctrl/Cmd + Q)" autocomplete="off" />
+      </div>
+
+      <div class="filters-container">
+        <details id="advancedFilters">
+          <summary>Filtri Avanzati, Soglie &amp; Ordinamento</summary>
+          <div class="filters-body options__body">
+            
+            <div class="grid-4">
+              <label>Ruolo
+                <select id="filterRole">
+                  <option value="">Tutti</option>
+                  <option value="P">Portieri (P)</option>
+                  <option value="D">Difensori (D)</option>
+                  <option value="C">Centrocampisti (C)</option>
+                  <option value="A">Attaccanti (A)</option>
+                </select>
+              </label>
+              <label>Divisione Fanta
+                <select id="filterDivision">
+                  <option value="">Tutte le leghe</option>
+                  </select>
+              </label>
+              <label>Stato Mercato
+                <select id="filterStatus">
+                  <option value="">Qualsiasi</option>
+                  <option value="free">Svincolati (nella Divisione)</option>
+                  <option value="taken">Tesserati (nella Divisione)</option>
+                </select>
+              </label>
+              <label>Squadra Serie A
+                <select id="filterTeam"><option value="">Tutte</option></select>
+              </label>
+            </div>
+
+            <div class="small separator-text">Soglie minime (lascia vuoto per ignorare)</div>
+            <div class="grid-4">
+               <label>Min MV
+                <input id="filterMinMV" type="number" step="0.05" min="0" max="10" placeholder="es. 6.00" />
+              </label>
+              <label>Min FM
+                <input id="filterMinFM" type="number" step="0.05" min="0" max="20" placeholder="es. 6.50" />
+              </label>
+              <label>Min Affidabilità %
+                <input id="filterMinAff" type="number" step="5" min="0" max="100" placeholder="es. 70" />
+              </label>
+              <label>Min Presenze
+                <input id="filterMinPres" type="number" step="1" min="0" max="38" placeholder="es. 10" />
+              </label>
+            </div>
+
+            <div class="small separator-text" style="margin-top:0.8rem">Ordinamento risultati</div>
+            <div class="grid-sort">
+              <label style="flex:1">Ordina per
+                <select id="sortBy">
+                  <optgroup label="Generale">
+                    <option value="nome">Nome (A-Z)</option>
+                    <option value="squadra">Squadra (A-Z)</option>
+                    <option value="quot">Quotazione (Decr)</option>
+                    <option value="p">Presenze (Decr)</option>
+                    <option value="aff">Affidabilità % (Decr)</option>
+                  </optgroup>
+                  <optgroup label="Voti & Medie">
+                    <option value="mvt">Media Voto Tot (Decr)</option>
+                    <option value="fmt">FantaMedia Tot (Decr)</option>
+                    <option value="mvdst">Costanza: Dev.Std MV (Crescente)</option>
+                    <option value="fmdst">Costanza: Dev.Std FM (Crescente)</option>
+                    <option value="mvc">MV Casa (Decr)</option>
+                    <option value="mvf">MV Fuori (Decr)</option>
+                    <option value="fmc">FM Casa (Decr)</option>
+                    <option value="fmf">FM Fuori (Decr)</option>
+                  </optgroup>
+                  <optgroup label="Bonus">
+                    <option value="gf">Gol Fatti (Decr)</option>
+                    <option value="as">Assist (Decr)</option>
+                    <option value="rp">Rigori Parati (P)</option>
+                    <option value="gfr">Gol su Rigore (Decr)</option>
+                  </optgroup>
+                  <optgroup label="Malus (Portieri/Dif)">
+                    <option value="gs">Gol Subiti (Crescente)</option>
+                    <option value="ag">Autogol (Crescente)</option>
+                    <option value="rs">Rigori Sbagliati (Crescente)</option>
+                    <option value="a">Ammonizioni (Crescente)</option>
+                    <option value="e">Espulsioni (Crescente)</option>
+                  </optgroup>
+                </select>
+              </label>
+              
+              <div class="opts-actions" style="align-self: flex-end;">
+                <button id="btnClearFilters" class="btn sm" type="button" style="opacity:0.8">Reset Tutto</button>
+              </div>
+            </div>
+
+          </div>
+        </details>
+      </div>
+
+      <div class="view-toggles">
+        <label class="switch"><input id="switchTheme" type="checkbox" checked /><span class="switch-text">Tema scuro</span></label>
+        <label class="switch"><input id="switchCurrent" type="checkbox" checked /><span class="switch-text">Stagione corrente</span></label>
+        <label class="switch"><input id="switchPrev" type="checkbox" checked /><span class="switch-text">Stagione precedente</span></label>
+        <label class="switch"><input id="switchStorico" type="checkbox" checked /><span class="switch-text">Storico</span></label>
+
+        <details class="options">
+          <summary>Opzioni</summary>
+          <div class="options__body">
+            <div class="options__sticky"><button id="btnCloseOptionsTop" class="btn sm" type="button">OK</button></div>
+            <fieldset>
+              <legend>Visualizzazione</legend>
+              <div class="grid-2">
+                <label><input id="opt_showDelta" type="checkbox" checked /> Mostra “Δ squadra (σ)”</label>
+                <label><input id="opt_showDetails" type="checkbox" checked /> Mostra Dettagli</label>
+                <label><input id="opt_useIndicators" type="checkbox" /> Usa indicatori testuali (emoji)</label>
+                <label><input id="opt_showRolePos" type="checkbox" checked /> Mostra “Posizione nel ruolo” (ranking)</label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Soglie & Badge (Stagione precedente)</legend>
+              <div class="grid-2">
+                <label>MV stagione precedente – soglia badge <input id="opt_mvPrevBadge" type="number" step="0.01" min="0" max="10" value="6.20" /></label>
+                <label>FM stagione precedente – soglia badge <input id="opt_fmPrevBadge" type="number" step="0.01" min="0" max="15" value="6.50" /></label>
+                <label>Affidabilità stagione precedente – soglia (%) <input id="opt_affPrevBadge" type="number" step="1" min="0" max="100" value="70" /></label>
+                <label><input id="opt_showPrevBadges" type="checkbox" /> Mostra i badge della stagione precedente</label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Ranking</legend>
+              <div class="grid-2">
+                <label>Min presenze (ranking Stag. corrente) <input id="opt_minPresRankCur" type="number" step="1" min="0" value="10" /></label>
+                <label>Min presenze (ranking Stag. precedente) <input id="opt_minPresRankPrev" type="number" step="1" min="0" value="10" /></label>
+                <label>Badge rank FM – stagione <select id="opt_rankBadgeSeasonFM"><option value="">Nessuna</option></select></label>
+                <label>Badge rank MV – stagione <select id="opt_rankBadgeSeasonMV"><option value="">Nessuna</option></select></label>
+                <label>Ranking (Stag. precedente) – metrica badge <select id="opt_rankBadgeMetric"><option value="FM" selected>FM</option><option value="MV">MV</option></select></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Badge per anno (valori)</legend>
+              <div class="grid-2">
+                <label>Badge FM/MV – stagione <select id="opt_badgeSeasonValues"><option value="">Nessuna</option></select></label>
+                <label>Badge Aff – stagione <select id="opt_badgeSeasonAff"><option value="">Nessuna</option></select></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Storico</legend>
+              <div class="grid-2">
+                <div><div class="small" style="margin-bottom:.4rem">Seleziona stagioni da includere</div><div id="opt_histSeasons" class="small"></div></div>
+                <div><label><input id="opt_histShowBM" type="checkbox" checked /> Mostra Bonus/malus</label><br><label><input id="opt_histShowPerPres" type="checkbox" checked /> Mostra Statistiche per presenza</label></div>
+              </div>
+            </fieldset>
+            <div class="opts-actions between">
+              <button id="btnResetOptions" class="btn sm" type="button">Reset impostazioni</button>
+              <button id="btnCloseOptions" class="btn sm" type="button">OK</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div id="panelResults" class="container hidden" role="listbox" aria-label="risultati">
+      <ul id="results" class="results"></ul>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section id="playerSection" class="player-section hidden">
+    <button id="btnClosePlayer" class="close-card-btn" title="Chiudi e torna alla ricerca" aria-label="Chiudi">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div class="player-hero">
+      <img id="playerPhoto" class="player-photo" alt="" />
+      <div class="player-meta">
+        <h2 id="playerName" class="player-name">Giocatore</h2>
+        <div id="playerMeta" class="player-meta-row"></div>
+        <div id="playerBadges" class="player-badges"></div>
+      </div>
+    </div>
+
+    <div class="cards">
+      <article id="wrapCurrent" class="card">
+        <h3 id="lblCurrent">Stagione corrente</h3>
+        <div id="cardCurrent" class="card-body"></div>
+      </article>
+      <article id="wrapPrev" class="card">
+        <h3 id="lblPrev">Stagione precedente</h3>
+        <div id="cardPrev" class="card-body"></div>
+      </article>
+      <article id="wrapStorico" class="card">
+        <h3>Storico</h3>
+        <div id="cardStorico" class="card-body"></div>
+      </article>
+    </div>
+
+    <div class="separator"></div>
+    <p class="small" id="dataDirInfo"></p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container small">AstaMasterPro v1.5.0 ©2025 mauz79</div>
+</footer>
+<script defer src="app.js"></script>
+</body>
+</html>
